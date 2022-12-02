@@ -101,19 +101,28 @@ void LCD_voidSendString(char* copy_pcString)
 void LCD_voidWriteNum(u32 copy_u32Number)
 {
 	u8 firstDigit = 0;
-	for(u32 i = 1000000000; i > 0; i /= 10)
+
+	if(0 == copy_u32Number)
 	{
-		if(copy_u32Number / i > 0)
+		LCD_voidSendCharacter(48);
+	}
+	else
+	{
+		for(u32 i = 1000000000; i > 0; i /= 10)
 		{
-			LCD_voidSendCharacter(copy_u32Number / i + 48);
-			copy_u32Number %= i;
-			firstDigit = 1;
+			if(copy_u32Number / i > 0)
+			{
+				LCD_voidSendCharacter(copy_u32Number / i + 48);
+				copy_u32Number %= i;
+				firstDigit = 1;
+			}
+			// Print 0 after the 1st digit
+			else if(firstDigit == 1)
+			{
+				LCD_voidSendCharacter(48);
+			}
 		}
-		// Print 0 after the 1st digit
-		else if(firstDigit == 1)
-		{
-			LCD_voidSendCharacter(48);
-		}
+
 	}
 }
 
@@ -163,5 +172,3 @@ void LCD_voidDrawSpecialCharacter(u8* copy_pu8Pattern, u8 copy_u8LocationNum, u8
 	// Display the pattern
 	LCD_voidSendCharacter(copy_u8LocationNum);
 }
-
-
